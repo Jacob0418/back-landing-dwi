@@ -5,5 +5,6 @@ export interface EmailForm {
     phone: string;
     message: string;
     bookDate?: Date;
+    token?: string;
     createdAt?: Date;
 }
