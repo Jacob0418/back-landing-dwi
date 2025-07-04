@@ -26,7 +26,7 @@ export async function createEmail(email: EmailForm & { "g-recaptcha-response": s
 
         const responseCaptcha = await axios.post('https://www.google.com/recaptcha/api/siteverify', null, {
             params: {
-                secret: '6LdWnGwrAAAAAIg4ZXU2ern4J8zHuJ76_J4qxlsh',
+                secret: process.env.RECAPTCHA_SECRET_KEY as string,
                 response: captchaToken,
             },
         });
