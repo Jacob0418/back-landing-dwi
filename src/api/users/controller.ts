@@ -26,8 +26,10 @@ export async function getUserByEmailController(req: Request, res: Response, next
 
 export async function authenticateUserController(req: Request, res: Response, next: NextFunction) {
     try {
+        console.log('BODY:', req.body);
         const { email, password } = req.body;
         const user = await authenticateUser(email, password);
+        console.log("User authenticated:", user);
         if (!user) {
             return res.status(401).send({ status: "error", message: "Invalid email or password" });
         }
