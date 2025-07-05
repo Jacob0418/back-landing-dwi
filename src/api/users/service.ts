@@ -69,6 +69,13 @@ export async function getUserByEmail(email: string): Promise<User | null> {
 //     return result.deletedCount === 1;
 // }
 
+export async function getAllUsers(): Promise<User[]> {
+    const db = await connect();
+    const collection = db.collection<User>('users');
+    
+    return collection.find().toArray();
+}
+
 export function generateToken(user: User): string {
     const payload = { id: user._id, email: user.email, role: user.role };
     return jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: '1h' });

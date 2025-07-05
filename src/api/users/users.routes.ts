@@ -6,5 +6,6 @@ const router = express.Router();
 router.post('/create-user', userController.createUserController as express.RequestHandler);
 router.get('/get-user/:email', userController.getUserByEmailController as express.RequestHandler);
 router.post('/authenticate', userController.authenticateUserController as express.RequestHandler);
+router.get('/get-users', userController.getAllUsersController as express.RequestHandler);
 
 export default router;

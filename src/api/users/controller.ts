@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { createUser, getUserByEmail, authenticateUser, generateToken } from "./service";
+import { createUser, getUserByEmail, authenticateUser, generateToken, getAllUsers } from "./service";
 
 export async function createUserController(req: Request, res: Response, next: NextFunction) {
     try {
@@ -36,6 +36,15 @@ export async function authenticateUserController(req: Request, res: Response, ne
         const token = generateToken(user);
 
         res.status(200).send({ status: "success", data: { user, token } });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function getAllUsersController(req: Request, res: Response, next: NextFunction) {
+    try {
+        const users = await getAllUsers();
+        res.status(200).send({ status: "success", data: users });
     } catch (error) {
         next(error);
     }
