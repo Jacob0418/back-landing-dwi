@@ -61,7 +61,7 @@ export async function sendEmail(email: EmailForm): Promise<void> {
         const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
         sendSmtpEmail.sender = { email: "info.cm@landingcrm.store", name: "Info CarManage" };
-        sendSmtpEmail.to = [{ email: email.email, name: email.name }];
+        sendSmtpEmail.to = [{ email: "jcob38061@gmail.com", name: "Jose Coronado" }];
         sendSmtpEmail.subject = "Formulario de Contacto - Lead";
         sendSmtpEmail.templateId = 1;
         const params = sendSmtpEmail.params = {
