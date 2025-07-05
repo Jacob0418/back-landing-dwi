@@ -27,47 +27,89 @@ export async function getUserByEmail(email: string): Promise<User | null> {
     return collection.findOne({ email });
 }
 
-// export async function getUserById(id: string): Promise<User | null> {
-//     const db = await connect();
-//     const collection = db.collection<User>('users');
+export async function getUserById(id: string): Promise<User | null> {
+    const db = await connect();
+    const collection = db.collection<User>('users');
     
-//     const mongoId = getMongoId(id);
-//     if (!mongoId) return null;
+    const mongoId = getMongoId(id);
+    if (!mongoId) return null;
     
-//     return collection.findOne({ _id: mongoId });
-// }
+    return collection.findOne({ _id: mongoId.toString() });
+}
 
-// export async function updateUser(id: string, userData: Partial<User>): Promise<User | null> {
-//     const db = await connect();
-//     const collection = db.collection<User>('users');
-    
-//     const mongoId = getMongoId(id);
-//     if (!mongoId) return null;
-    
-//     if (userData.password) {
-//         userData.password = await bcrypt.hash(userData.password, 10);
-//     }
-    
-//     const result = await collection.findOneAndUpdate(
-//         { _id: mongoId },
-//         { $set: userData },
-//         { returnDocument: 'after' }
-//     );
-    
-//     return result.value || null;
-// }
 
-// export async function deleteUser(id: string): Promise<boolean> {
-//     const db = await connect();
-//     const collection = db.collection<User>('users');
+export async function updateUser(id: string, userData: Partial<User>): Promise<User | null> {
+    const db = await connect();
+    const collection = db.collection<User>('users');
     
-//     const mongoId = getMongoId(id);
-//     if (!mongoId) return false;
+    const mongoId = getMongoId(id);
+    if (!mongoId) return null;
     
-//     const result = await collection.deleteOne({ _id: mongoId });
+    if (userData.password) {
+        userData.password = await bcrypt.hash(userData.password, 10);
+    }
     
-//     return result.deletedCount === 1;
-// }
+    const result = await collection.findOneAndUpdate(
+        { _id: mongoId },
+        { $set: userData },
+        { returnDocument: 'after' }
+    );
+    
+    return result ? { ...result, _id: result._id.toString() } : null;
+}
+
+export async function deleteUser(id: string): Promise<boolean> {
+    const db = await connect();
+    const collection = db.collection<User>('users');
+
+    const mongoId = getMongoId(id);
+    if (!mongoId) return false;
+
+    const result = await collection.updateOne(
+        { _id: mongoId },
+        { $set: { isDeleted: true } }
+    );
+
+    return result.modifiedCount === 1;
+}
+
+export async function discardUser(id: string): Promise<boolean> {
+    const db = await connect();
+    const collection = db.collection<User>('users');
+    const mongoId = getMongoId(id);
+    if (!mongoId) return false;
+    const result = await collection.updateOne(
+        { _id: mongoId },
+        { $set: { isDiscard: true } }
+    );
+    return result.modifiedCount === 1;
+}
+
+export async function setIsNewUser(id: string): Promise<boolean> {
+    const db = await connect();
+    const collection = db.collection<User>('users');
+    const mongoId = getMongoId(id);
+    if (!mongoId) return false;
+
+    const result = await collection.updateOne(
+        { _id: mongoId },
+        { $set: { isNew: true } }
+    );
+    return result.modifiedCount === 1;
+}
+
+export async function setIsContactUser(id: string): Promise<boolean> {
+    const db = await connect();
+    const collection = db.collection<User>('users');
+    const mongoId = getMongoId(id);
+    if (!mongoId) return false;
+
+    const result = await collection.updateOne(
+        { _id: mongoId },
+        { $set: { isContact: true } }
+    );
+    return result.modifiedCount === 1;
+}
 
 export async function getAllUsers(): Promise<User[]> {
     const db = await connect();

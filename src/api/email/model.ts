@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 export interface EmailForm {
     _id?: string;
     name: string;
